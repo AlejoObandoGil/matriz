@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Matriz</title>
+</head>
+<body style="margin: 0">
+	<canvas id="canvas_matriz" width="1000" height="500"></canvas>
+	<script>
+		// variables de contexto
+		let canvas, contexto;
+		let vertical = 10, horizontal = 5;
+		// variables tamaño de cuadros(filas y columnas de matriz)
+		let ancho = 1000 / horizontal;
+		let alto = 500 / vertical;
+		// posicion del mouse (cuadro)
+		let posicion = {x: 0, y: 0};
+		// lista de cuadros deshabilitados
+		let deshabilitado = [];
+		// variable booleana que pinta cuadros si no estan deshabilitados
+		var habilitado = true;
+
+		// definimos el contexto
+		window.onload = function() {
+			canvas = document.getElementById('canvas_matriz');
+			contexto = canvas.getContext('2d');
+
+			// evento que detecta el click del mouse
+			canvas.onmouseup = function(event) {
+
+				posicion.x = Math.floor(event.clientX / ancho);
+				posicion.y = Math.floor(event.clientY / alto);
+				// comprobamos si donde damos click esta habilitado
+				for(var i = 0; i < deshabilitado.length; i++) {
+
+				    if (deshabilitado[i].x == posicion.x && deshabilitado[i].y == posicion.y) {
+				    	habilitado = false;
+				        alert("opcion deshabilitada!");
+				        break;
+				    }else{
+				    	habilitado = true;
+				    }
+				}
+				// si no esta deshabilitado entonces podemos pintar nuevos cuadros de la matriz
+				if (habilitado){
+					pintarCuadros();
+				}
+			}
+			fondoMatriz();
+			dibujarCuadridula();
+		}
+		function pintarCuadros(){
+			// pintamos cuadros hacia la derecha
+			for(var x=posicion.x; x<=4; x++){
+				cuadro(posicion.x++, posicion.y, "green");
+				deshabilitado.push({x: posicion.x, y: posicion.y})
+			}
+
+			posicion.x = Math.floor(event.clientX / ancho);
+			posicion.y = Math.floor(event.clientY / alto);
+			// pintamos cuadros hacia la izquierda
+			for(var x=posicion.x; x>=0; x--){
+				cuadro(posicion.x--, posicion.y, "green");
+				deshabilitado.push({x: posicion.x, y: posicion.y})
+			}
+
+			posicion.x = Math.floor(event.clientX / ancho);
+			posicion.y = Math.floor(event.clientY / alto);
+			// pintamos cuadros hacia abajo
+			for(var y=posicion.y; y<=9; y++){
+				cuadro(posicion.x, posicion.y++, "green");
+				deshabilitado.push({x: posicion.x, y: posicion.y})
+			}
+
+			posicion.x = Math.floor(event.clientX / ancho);
+			posicion.y = Math.floor(event.clientY / alto);
+			// pintamos cuadros hacia arriba
+			for(var y=posicion.y; y>=0; y--){
+				cuadro(posicion.x, posicion.y--, "green");
+				deshabilitado.push({x: posicion.x, y: posicion.y})
+			}
+			// pintamos el cuadro seleccionado de otro color
+			posicion.x = Math.floor(event.clientX / ancho);
+			posicion.y = Math.floor(event.clientY / alto);
+			cuadro(posicion.x, posicion.y, "red");
+
+			dibujarCuadridula();
+			// mostramos en consola los cuadros deshabilitados de la matriz
+			console.log(deshabilitado);	
+		}
+
+		// funcion que dibuja el cuadro
+		function cuadro(x, y, color) {
+			contexto.fillStyle = color;
+			var rx = x * ancho;
+			var ry = y * alto;
+			contexto.fillRect(rx, ry, ancho, alto);
+		}
+		// funcion que pinta el fondo de la matriz
+		function fondoMatriz() {   
+			contexto.fillStyle = '#ECECEC'; // gris
+			contexto.fillRect(0, 0, 1000, 500);
+		}
+		// funcion que pinta la matriz
+		function dibujarCuadridula() {
+			// dibujamos la cuadricula con lineas horizontales y verticales
+			for (var x=0; x<=1000; x=x+200){
+			   contexto.moveTo(x,0);
+			   contexto.lineTo(x,1000);
+			}   
+			for (var y=0; y<=1000; y=y+50){
+			   contexto.moveTo(0,y);
+			   contexto.lineTo(1000,y);
+			}
+			// pintamos la cuadricula
+			contexto.strokeStyle = "#000000"; //negro
+			contexto.stroke(); 
+		}
+	</script>
+	<h1>Matriz</h1>
+</body>
+</html>
